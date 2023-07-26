@@ -1,0 +1,443 @@
+:root {
+  --primary-color: rgb(32, 21, 71);
+  --secondary-color: rgb(0, 119, 128);
+  --secondary-color-fade: rgba(0, 119, 128, .6)
+}
+
+.dt-buttons.btn-group {
+  position: absolute;
+}
+
+#navbar-logo {
+  position: absolute;
+  right: 10px;
+  top: 4px;
+  height: 40px;
+}
+
+#sidebar {
+  position: fixed;
+  width: 32%;
+  margin-top: 64px;
+  margin-bottom: 16px;
+  top: 0;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.3) 0.3px 0.3px 7px 0px;
+  border-radius: 0;
+  z-index: 1030 !important;
+}
+
+#shiny-notification-panel {
+  left: 0;
+}
+
+#loadmessage {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  padding: 5px 0px 5px 0px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 100%;
+  color: #000000;
+  background-color: #CCFF66;
+  z-index: 105;
+}
+
+#alert-subgraph\.table tr {
+  cursor: pointer;
+}
+
+#mystery-mysterytable tr {
+  cursor: pointer;
+}
+
+.datatables.recalculating:before {
+  content: "Refreshing table from server...";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  margin-left: -100px;
+  margin-top: -26px;
+  text-align: center;
+  padding: 1em 0;
+  color: rgb(0, 119, 128);
+  background-color: #fff;
+  border: 1px solid rgb(221, 221, 221);
+  border-radius: 5px;
+  padding: 6px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0.3px 0.3px 7px 0;
+  z-index: 1900;
+}
+
+h2, .h2 {
+    font-size: 3.6rem;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: inherit;
+    font-weight: 600;
+    line-height: 1.2;
+    color: inherit;
+}
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #eee;
+  color: #007780;
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: 500;
+  padding: 1rem 1rem 1rem 1rem;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline-width: 0;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.collapsible-active, .collapsible:hover {
+  color: #005359;
+  background-color: #e3e3e3;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.collapsible-content {
+  padding: 0;
+  margin-bottom: 8px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.collapsible-content .table {
+  margin-bottom: 0;
+}
+
+.collapsible:after {
+  -webkit-font-smoothing: antialiased;
+  content: '+';
+  color: #007780;
+  line-height: 1;
+  position: absolute;
+  top: 2rem;
+  right: 3rem;
+  margin-top: 1rem;
+}
+
+.collapsible-active:after {
+  content: "-"; /* Unicode character for "minus" sign (-) */
+  margin-top: 0.9rem;
+  margin-right: 0.1rem
+}
+
+.footer {
+  box-sizing: border-box;
+  position: absolute;
+  text-align: center;
+  background-color:rgb(32, 21, 71);
+  color: #fff;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding: 36px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.plotly-notifier {
+  left: 4px;
+  z-index: 10000;
+  font-size: 10pt;
+  max-width: 180px;
+}
+
+.nav {
+  font-size: 1.6rem;
+}
+
+.row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+  flex-wrap: wrap;
+}
+.row > .col-eq-height {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+.navbar-inverse {
+  background-color: rgb(32, 21, 71);
+  border-color: #080808;
+  border-width: 0;
+  color: #fff;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+  color: #fff;
+  font-weight: 500;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+  color: #fff;
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus {
+  background-color: rgb(32, 21, 71);
+  box-shadow: inset 0 -5px 0 rgb(0, 119, 128);
+}
+
+.navbar-inverse .navbar-nav>.active>a:hover {
+  background-color: rgb(32, 21, 71);
+}
+
+/* Pills */
+.nav-pills {
+  margin-bottom: 4px;
+}
+
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+  color: rgb(22, 15, 49); 
+  background-color: rgb(227, 227, 227);
+  border-radius: 0;
+  box-shadow: inset 0 -5px 0 rgb(0, 119, 128)
+}
+
+.nav-pills>li>a{
+  color: rgb(32, 21, 71); 
+  background-color: rgb(239, 239, 239);
+  border-radius: 0;
+}
+
+/* Controls */
+/* rgb(0, 114, 122) = hsl(184, 100%, 25%) */
+/* rgb(0, 95, 102) = hsl(184, 100%, 20%) */
+/* rgb(0, 81, 87) = hsl(184, 100%, 17%) */
+/* rgb(0, 71, 77) = hsl(184, 100%, 15%) */
+
+.btn-primary {
+  background-color: rgb(0, 114, 122);
+  border-color: rgb(0, 95, 102);
+}
+
+.btn-primary:hover {
+  background-color: rgb(0, 81, 87);
+  border-color: rgb(0, 81, 87);
+}
+
+.btn-primary.active, .btn-primary:active {
+  background-color: rgb(0, 95, 102);
+  border-color: rgb(0, 81, 87);
+}
+
+.btn-primary.focus, .btn-primary:focus, .btn-primary:active:hover {
+  background-color: rgb(0, 95, 102);
+  border-color: rgb(0, 71, 77);
+}
+
+
+td.active, .table.dataTable tbody tr.active td {
+    background-color: rgb(0, 119, 128) !important;
+}
+
+.pagination>.active>a, .pagination>.active>a:active, .pagination>.active>a:hover {
+  background-color: rgb(0, 119, 128);
+  border-color: rgb(0, 95, 102);
+}
+
+.pagination>.active>a:focus {
+  background-color: rgb(0, 119, 128);
+  border-color: rgb(0, 119, 128);
+}
+
+.pagination>li>a, .pagination>li>span {
+  color: rgb(0, 119, 128);
+}
+
+/* visNetwork */
+
+.visnetwork-legend {
+  display: inline-block;
+  top: 10px;
+  border-radius: 5px;
+  padding: 6px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0.3px 0.3px 7px 0;
+  background: white;
+  width: 150px;
+}
+
+.visnetwork-legend * {
+  font-size: 12px;
+  line-height: 1em;
+}
+
+.visnetwork-legend span {
+  display: inline-block;
+  vertical-align: middle;
+  height: 1.5rem;
+  width: 1.5rem;
+  margin-right: 4px;
+}
+
+.visnetwork-tooltip {
+  position: fixed;
+  visibility: hidden;
+  padding: 6px;
+  color: #222;
+  font-family: Vic, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  background-color: #fff;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  max-width: 400px;
+  word-break: break-all;
+}
+
+.visnetwork-tooltip-top {
+	margin-top: -6px;
+}
+
+.visnetwork-tooltip-top:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	left: 50%;
+	bottom: 0;
+	margin-left: -6px;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+}
+	
+/* Leaflet */
+
+.leaflet-control-layers {
+  border: 0 !important;
+  box-shadow: rgba(0, 0, 0, 0.3) 0.3px 0.3px 7px 0 !important;
+  background: #ffffffcc;
+}
+
+.leaflet-control-layers-overlays > label > div > span {
+  font-weight: 400;
+}
+
+.control-label {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 0 4px;
+  line-height: 1.1;
+}
+
+.shiny-input-container:not(.shiny-input-container-inline) {
+  width: 100%;
+}
+
+.form-control:focus, .rt-search:focus {
+  border-color: rgb(0, 119, 128);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(0, 119, 128, .6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(0, 119, 128, .6);
+}
+
+.irs {
+  height: 32px;
+}
+
+.irs>.irs-bar, .irs>.irs-bar-edge {
+  border-top: 1px solid rgb(0, 119, 128);
+  border-bottom: 1px solid rgb(0, 119, 128);
+  background: rgb(0, 119, 128);
+}
+
+.irs>.irs-from, .irs>.irs-to, .irs>.irs-single {
+  background: rgb(0, 119, 128);
+}
+
+.leaflet-legend-icon {
+  object-fit: contain;
+  height: 16px;
+  width: 16px;
+  margin-right: 4px;
+  text-align: center;
+}
+
+.leaflet-legend-dot {
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  margin-left: 4px;
+  margin-right: 8px;
+}
+
+@media (min-width: 992px) {
+  .modal-lg {
+    width: 90%;
+    max-width: 1200px;
+  }
+}
+
+/* fonts */
+
+* {
+  font-family: Vic,"Helvetica Neue", Helvetica, Arial,"sans-serif";
+}
+
+body {
+  line-height: 1.5em;
+  font-weight: 400;
+}
+
+@font-face {
+    font-family: "Vic";
+    src: url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Regular/VIC-Regular.eot");
+    src: url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Regular/VIC-Regular.eot?#iefix") format("embedded-opentype"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Regular/VIC-Regular.woff") format("woff"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Regular/VIC-Regular.woff2") format("woff2"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Regular/VIC-Regular.ttf") format("truetype"),
+         url("/fonts/vic/VIC-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Vic";
+    src: url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/SemiBold/VIC-SemiBold.eot");
+    src: url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/SemiBold/VIC-SemiBold.eot?#iefix") format("embedded-opentype"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/SemiBold/VIC-SemiBold.woff") format("woff"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/SemiBold/VIC-SemiBold.woff2") format("woff2"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/SemiBold/VIC-SemiBold.ttf") format("truetype"),
+         url("/fonts/vic/VIC-SemiBold.woff") format("woff");
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Vic";
+    src: url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Medium/VIC-Medium.eot");
+    src: url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Medium/VIC-Medium.eot?#iefix") format("embedded-opentype"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Medium/VIC-Medium.woff") format("woff"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Medium/VIC-Medium.woff2") format("woff2"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Medium/VIC-Medium.ttf") format("truetype"),
+         url("/fonts/vic/VIC-Medium.woff") format("woff");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Vic";
+    src: url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Bold/VIC-Bold.eot");
+    src: url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Bold/VIC-Bold.eot?#iefix") format("embedded-opentype"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Bold/VIC-Bold.woff") format("woff"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Bold/VIC-Bold.woff2") format("woff2"),
+         url("https://rstudio.covid19.dhhs.vic.gov.au/connect/fonts/Bold/VIC-Bold.ttf") format("truetype"),
+         url("/fonts/vic/VIC-Bold.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+}

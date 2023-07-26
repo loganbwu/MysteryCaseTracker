@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 16 16"
+   version="1.1"
+   sodipodi:docname="plus-square.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata19">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="986"
+     id="namedview17"
+     showgrid="false"
+     inkscape:zoom="14.75"
+     inkscape:cx="8"
+     inkscape:cy="8"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:none;}.cls-2{fill:#262626;}.cls-3{fill:#fff;opacity:0.5;}</style>
+  </defs>
+  <title
+     id="title6">plus-square</title>
+  <polygon
+     class="cls-1"
+     points="12 7 9 7 9 4 7 4 7 7 4 7 4 9 7 9 7 12 9 12 9 9 12 9 12 7"
+     id="polygon8" />
+  <path
+     class="cls-2"
+     d="M14,1H2A1,1,0,0,0,1,2V14a1,1,0,0,0,1,1H14a1,1,0,0,0,1-1V2A1,1,0,0,0,14,1ZM13,9a1,1,0,0,1-1,1H10v2a1,1,0,0,1-1,1H7a1,1,0,0,1-1-1V10H4A1,1,0,0,1,3,9V7A1,1,0,0,1,4,6H6V4A1,1,0,0,1,7,3H9a1,1,0,0,1,1,1V6h2a1,1,0,0,1,1,1V9Z"
+     id="path10"
+     style="fill:#ff0000" />
+  <path
+     class="cls-3"
+     d="M14,0H2A2,2,0,0,0,0,2V14a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V2A2,2,0,0,0,14,0Zm1,14a1,1,0,0,1-1,1H2a1,1,0,0,1-1-1V2A1,1,0,0,1,2,1H14a1,1,0,0,1,1,1V14Z"
+     id="path12" />
+  <path
+     class="cls-3"
+     d="M12,6H10V4A1,1,0,0,0,9,3H7A1,1,0,0,0,6,4V6H4A1,1,0,0,0,3,7V9a1,1,0,0,0,1,1H6v2a1,1,0,0,0,1,1H9a1,1,0,0,0,1-1V10h2a1,1,0,0,0,1-1V7A1,1,0,0,0,12,6ZM9,12H7V9H4V7H7V4H9V7h3V9H9v3Z"
+     id="path14" />
+</svg>

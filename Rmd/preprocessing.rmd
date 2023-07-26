@@ -1,0 +1,234 @@
+---
+title: "Mystery Case Tracker Preprocessing"
+subtitle: "This scheduled RMarkdown document queries the data model, performs preprocessing, updates the pinned datasources and restarts the Mystery Case Tracker app."
+author:
+  - name: Logan Wu^[Department of Health, logan.wu@health.vic.gov.au]
+date: "Last refreshed `r format(lubridate::now(tzone='Australia/Melbourne'), '%d %B, %Y %H:%M')`"
+output:
+  html_document:
+    code_folding: show
+    toc: yes
+    toc_float:
+      collapsed: no
+    fig_width: 8.64
+toc-title: "On this page"
+dh-navbar: yes
+---
+
+Note: This file is completely unused for the demo version of the app.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(stringi)
+library(sf)
+library(odbc)
+library(pins)
+library(connectapi)
+library(R.utils)
+library(whichWithin) # devtools::install_github("HughParsonage/whichWithin")
+library(data.table) # devtools::install_github("rstudio/connectapi")
+library(xml2)
+library(lobstr)
+
+# Declare functions
+'%ni%' <- Negate('%in%')
+
+if (Sys.getenv("RSCONNECT_API_KEY") == "") {
+  stop("No RStudio Connect API key supplied in .Renviron or with Sys.setenv(). Contact LW for assistance")
+}
+```
+
+# Set up database connection
+
+```{r make_connection}
+# Add UID/PWD environment variables in RSConnect after publishing
+message("Making connection")
+conn <- dbConnect(
+  odbc(),
+  Driver = "ODBC Driver 17 for SQL Server",
+  Server = "u-ause-ps-sql-s-hpb-rpt-01.database.windows.net",
+  uid = Sys.getenv("PHESS_DW01_UID"),
+  pwd = Sys.getenv("PHESS_DW01_PWD"),
+  Database = "phess-dw01",
+  encoding = "latin1",
+  applicationintent = "readonly"
+)
+```
+
+## Run SQL queries
+
+Includes positive rows, rows with a `ClusterName`, and non-rejected rows within the past 60 days. This is a temporary solution to cope with the increased data size from permit holders.
+
+```{r sql_classifications}
+all_classifications = dbGetQuery(conn, "SELECT DISTINCT Classification FROM sf_derived.LineList")
+all_classifications = all_classifications[!is.na(all_classifications)]
+rejected_classifications = all_classifications %>%
+  str_subset("eject")
+```
+
+```{r sql_linelist}
+linelist <- dbGetQuery(conn, paste0("SELECT
+                       CAST(ll.CaseNumber AS INT) AS CaseNumber,
+                       ll.Classification,
+                       pp.Latitude,
+                       pp.Longitude,
+                       ac.AddressLongitude__c AS AddressLongitude,
+                       ac.AddressLatitude__c AS AddressLatitude
+                       FROM V_LineList AS ll
+                       LEFT JOIN V_Person as pp
+                         ON ll.RecordID = pp.RecordID
+                       LEFT JOIN Account as ac
+                         ON pp.AccountID = ac.Id
+                       WHERE ll.Classification NOT IN (", paste0("'", rejected_classifications, "'", collapse=", "), ")"))
+linelist = linelist %>%
+  mutate(
+    # Set known default values to NA
+    Longitude = ifelse(Longitude==-999 & Latitude==-999 |
+                         Longitude==145 & Latitude%in%c(-39,-39.2), NA, Longitude),
+    Latitude = ifelse(is.na(Longitude), NA, Latitude),
+    AddressLongitude = ifelse(AddressLongitude==-999 & AddressLatitude==-999 |
+                                AddressLongitude==145 & AddressLatitude%in%c(-39,-39.2), NA, AddressLongitude),
+    AddressLatitude = ifelse(is.na(AddressLongitude), NA, AddressLatitude),
+    
+    # Coalesce coordinates and remove Account fields
+    Longitude = coalesce(AddressLongitude, Longitude),
+    Latitude = coalesce(AddressLatitude, Latitude),
+    AddressLongitude = NULL,
+    AddressLatitude = NULL
+  )
+```
+
+```{r sql_clustersites}
+clustersites <- dbGetQuery(conn, 
+                           "SELECT
+                           CAST(ExposureCaseNumber AS INT) AS ExposureCaseNumber,
+                           DeclaredDate,
+                           Latitude,
+                           Longitude
+                           FROM V_ClusterSites")
+```
+
+```{r sql_casemovement}
+casemovement = dbGetQuery(conn,
+                          "SELECT
+                          CAST(ll.CaseNumber AS INT) AS CaseNumber,
+                          cm.MovementDate,
+                          cm.MovementTime,
+                          cm.MovementPlace,
+                          cm.FullCleanAddress AS 'Address',
+                          COALESCE(lo.AddressLongitude__c, cm.Longitude) AS Longitude,
+                          COALESCE(lo.AddressLatitude__c, cm.Latitude) AS Latitude,
+                          cm.AddressType
+                          FROM V_casemovement AS cm
+                          INNER JOIN V_LineList AS ll
+                            ON cm.RecordID = ll.RecordID
+                          LEFT JOIN ContactEncounter AS ce
+                            ON cm.Id = ce.Id
+                          LEFT JOIN Location AS lo
+                            ON ce.Location__c = lo.Id") %>%
+  mutate_if(is.character, function(x) iconv(x, to="Latin1")) %>%
+  # Set known default coordinates to NA
+  mutate(Longitude = ifelse(Longitude==145 & Latitude%in%c(-39,-39.2), NA, Longitude),
+         Latitude = ifelse(is.na(Longitude), NA, Latitude)) %>%
+  # create unique casemovement location id from lat and lon:
+  arrange(Latitude) %>%
+  group_by(Longitude, Latitude) %>%
+  mutate(CoordID = -cur_group_id()) %>%
+  ungroup() %>%
+  # remove the CoordID for invalid coordinates
+  mutate(CoordID = ifelse(is.na(Longitude), NA, CoordID),
+         Address = Address %>% str_to_title %>% str_replace("Vic(?![a-z])", "VIC"))
+
+message("SQL queries complete")
+```
+
+- **Linelist**: `r scales::comma(nrow(linelist))` rows
+- **Clustersites**: `r scales::comma(nrow(clustersites))` rows
+- **Casemovements**: `r scales::comma(nrow(casemovement))` rows
+
+## Proximity links between exposure sites and case movement locations
+
+```{r location_proximity_links}
+locations = bind_rows(
+  clustersites %>% mutate(id=ExposureCaseNumber, Type="Exposure site"),
+  casemovement %>% distinct(CoordID, .keep_all=T) %>% mutate(id=CoordID, Type="Risk history")
+) %>%
+  select(id, Longitude, Latitude) %>%
+  drop_na(Longitude, Latitude)
+setDT(locations)
+setkey(locations, Latitude, Longitude)
+
+# location date ranges
+cooldown = 30 # a visit is active for 30 days
+clustersites.daterange = clustersites %>%
+  select(id = ExposureCaseNumber, start = DeclaredDate) %>%
+  mutate(end = start + days(30))
+casemovement.daterange = casemovement %>%
+  select(id = CoordID, start = MovementDate) %>%
+  mutate(end = start + days(30)) %>%
+  drop_na(id) %>%
+  group_by(id) %>%
+  summarise(start = min(start), end = max(end))
+locations.daterange = bind_rows(clustersites.daterange, casemovement.daterange)
+
+# Add links with max distance
+location_proximity_edges = which_within(locations$Latitude, 
+                                        locations$Longitude,
+                                        radius = "500 m",
+                                        incl_dist = TRUE,
+                                        id = locations$id) %>%
+  mutate(distance = dist * 1000) %>%
+  select(from = orig, to = dest, distance) %>%
+  left_join(locations.daterange, by=c("from"="id")) %>%
+  left_join(locations.daterange, by=c("to"="id")) %>%
+  filter(start.x <= end.y & start.y <= end.x) %>% # req ranges to overlap
+  select(from, to, distance)
+```
+
+Generated **`r nrow(location_proximity_edges)`** proximity edges between locations (exposure sites and risk history)
+
+## Proximity links between people
+
+- Max distance of 50m
+- Requires at least one to be a confirmed case
+
+```{r person_proximity_links}
+persons = linelist %>%
+  select(CaseNumber, Longitude, Latitude, Classification) %>%
+  drop_na(Longitude, Latitude)
+setDT(persons)
+setkey(persons, Latitude, Longitude)
+
+# Add links with very small max distance
+person_proximity_edges = which_within(persons$Latitude, 
+                                      persons$Longitude,
+                                      radius = "50 m",
+                                      incl_dist = TRUE,
+                                      id = persons$CaseNumber) %>%
+  select(from = orig, to = dest, distance=dist) %>%
+  filter(from %in% persons$CaseNumber[persons$Classification=="Confirmed"] |
+           to %in% persons$CaseNumber[persons$Classification=="Confirmed"])
+```
+
+Generated **`r nrow(person_proximity_edges)`** proximity edges between people where at least one is a confirmed case
+
+# Write data to RSConnect board
+
+```{r write_to_rsconnect}
+# bind all proximity edges together then add to list with case movements
+proximity_edges = bind_rows(location_proximity_edges, person_proximity_edges)
+message("Board register complete")
+data = list(casemovement = casemovement,
+            proximity_edges = proximity_edges,
+            all_classifications = all_classifications)
+
+board_register_rsconnect(server = "https://rstudio.covid19.dhhs.vic.gov.au",
+                         key = Sys.getenv("RSCONNECT_API_KEY"))
+pin(data, "MysteryCaseTracker-Data", board="rsconnect")
+```
+
+Pinned **`r round(obj_size(data)/(1024^2), 1)`** megabytes
